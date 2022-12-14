@@ -13,12 +13,17 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { useColorScheme } from "react-native"
+import { useColorScheme, View } from "react-native"
 import Config from "../config"
 import {
   WelcomeScreen,
+  InfoScreen
 } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
+import { Footer } from "../components/Footer"
+import { spacing } from "../theme"
+import { RoomsScreen } from "../screens/RoomsScreen"
+import { SettingsScreen } from "../screens/SettingsScreen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -34,8 +39,11 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
 export type AppStackParamList = {
-  Welcome: undefined
+  Welcome: undefined,
   // 🔥 Your screens go here
+  Info: undefined,
+  Room: undefined,
+  Settings: undefined,
 }
 
 /**
@@ -57,8 +65,11 @@ const AppStack = observer(function AppStack() {
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
     >
-          <Stack.Screen name="Welcome" component={WelcomeScreen} />
-      {/** 🔥 Your screens go here */}
+          <Stack.Screen name="Home" component={WelcomeScreen} />
+          {/** 🔥 Your screens go here */}
+          <Stack.Screen name="Room" component={RoomsScreen} />
+          <Stack.Screen name="Info" component={InfoScreen} />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
     </Stack.Navigator>
   )
 })
@@ -74,9 +85,11 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-      {...props}
-    >
-      <AppStack />
+      {...props}>
+      <View style={{ flex: 1 }}>
+        <AppStack />
+      </View>
+      <Footer />
     </NavigationContainer>
   )
 })

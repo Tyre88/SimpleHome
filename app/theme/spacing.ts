@@ -14,3 +14,50 @@ export const spacing = {
 } as const
 
 export type Spacing = keyof typeof spacing
+
+export const $margin = {
+  bottom: {
+    micro: { marginBottom: spacing.micro },
+    tiny: { marginBottom: spacing.tiny },
+    extraSmall: { marginBottom: spacing.extraSmall },
+    small: { marginBottom: spacing.small },
+    medium: { marginBottom: spacing.medium },
+    large: { marginBottom: spacing.large },
+    extraLarge: { marginBottom: spacing.extraLarge },
+    huge: { marginBottom: spacing.huge },
+    massive: { marginBottom: spacing.massive },
+  },
+  left: {
+    micro: { marginLeft: spacing.micro },
+    tiny: { marginLeft: spacing.tiny },
+    extraSmall: { marginLeft: spacing.extraSmall },
+    small: { marginLeft: spacing.small },
+    medium: { marginLeft: spacing.medium },
+    large: { marginLeft: spacing.large },
+    extraLarge: { marginLeft: spacing.extraLarge },
+    huge: { marginLeft: spacing.huge },
+    massive: { marginLeft: spacing.massive },
+  },
+  right: {
+    micro: { marginRight: spacing.micro },
+    tiny: { marginRight: spacing.tiny },
+    extraSmall: { marginRight: spacing.extraSmall },
+    small: { marginRight: spacing.small },
+    medium: { marginRight: spacing.medium },
+    large: { marginRight: spacing.large },
+    extraLarge: { marginRight: spacing.extraLarge },
+    huge: { marginRight: spacing.huge },
+    massive: { marginRight: spacing.massive },
+  },
+  top: {
+    micro: { marginTop: spacing.micro },
+    tiny: { marginTop: spacing.tiny },
+    extraSmall: { marginTop: spacing.extraSmall },
+    small: { marginTop: spacing.small },
+    medium: { marginTop: spacing.medium },
+    large: { marginTop: spacing.large },
+    extraLarge: { marginTop: spacing.extraLarge },
+    huge: { marginTop: spacing.huge },
+    massive: { marginTop: spacing.massive },
+  },
+} as const;

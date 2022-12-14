@@ -1,3 +1,6 @@
+import { loadString } from "../../utils/storage/storage";
+import { navigate } from "../../navigators/navigationUtilities";
+
 /**
  * This Api class lets you define an API endpoint and methods to request
  * data and process it.
@@ -20,6 +23,7 @@ import type {
 export const DEFAULT_API_CONFIG: ApiConfig = {
   url: Config.API_URL,
   timeout: 10000,
+  API_TOKEN: ''
 }
 
 /**
@@ -39,9 +43,32 @@ export class Api {
       baseURL: this.config.url,
       timeout: this.config.timeout,
       headers: {
+        Authorization: "Bearer " + this.config.API_TOKEN,
         Accept: "application/json",
       },
-    })
+    });
+
+    this.loadLocalStorageData();
+  }
+
+  loadLocalStorageData() {
+    loadString('BASE_URL').then((url) => {
+      if (url) {
+        console.log('BASE_URL', url);
+        this.apisauce.setBaseURL(url);
+      }
+    });
+
+    loadString('API_TOKEN').then((token) => {
+      if (token) {
+        this.apisauce.deleteHeader('Authorization');
+        this.apisauce.setHeader('Authorization', 'Bearer ' + token);
+      }
+      else {
+        console.log('NAVIGATE TO SETTINGS');
+        navigate('Settings');
+      }
+    });
   }
 
 }

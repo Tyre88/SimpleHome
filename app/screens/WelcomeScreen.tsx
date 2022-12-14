@@ -1,12 +1,22 @@
 import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
-import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Alert, Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 import {
   Text,
+  Card,
+  Button,
+  Icon,
+  Toggle,
 } from "../components"
 import { isRTL } from "../i18n"
+import { Api } from "../services/api"
 import { colors, spacing } from "../theme"
 import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
+import { api } from "../services/api/api"
+import { HassEntity } from "../models/hass/hass-entity"
+import  { HassEntityService } from "../services/hass/hass-entity-service"
+import { $h1 } from "../theme/texts"
 
 const welcomeLogo = require("../../assets/images/logo.png")
 const welcomeFace = require("../../assets/images/welcome-face.png")
@@ -14,68 +24,85 @@ const welcomeFace = require("../../assets/images/welcome-face.png")
 
 export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(
 ) {
+  const hassEntityService = new HassEntityService();
 
-  const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
+  const [cards, setCards] = React.useState([] as React.ReactElement[]);
+
+  const getStates = () => {
+    hassEntityService.getAll().then((e: HassEntity[]) => {
+      generateCards(e.filter((e: HassEntity) => e.entity_id.startsWith("light.") && e.state !== "unavailable")
+        .sort((a: HassEntity, b: HassEntity) => a.attributes.friendly_name.localeCompare(b.attributes.friendly_name)));
+    });
+  }
+
+  const toggle = (entity: HassEntity) => () => {
+    hassEntityService.toggle(entity).then((e: HassEntity) => {
+      console.log(e);
+      getStates();
+    });
+  }
+
+  const getColor = (entity: HassEntity): string => {
+    if(entity.state === "on") { 
+      if(entity.attributes.rgb_color) {
+        return `rgb(${entity.attributes.rgb_color[0]}, ${entity.attributes.rgb_color[1]}, ${entity.attributes.rgb_color[2]})`;
+      }
+      return "#ffcc00";
+    }
+    else if (entity.state === "off") {
+      return "grey";
+    }
+  }
+
+  const generateCards = (c: HassEntity[]) => {
+    const cards = [];
+    for(let i = 0; i < c.length; i++) {
+      cards.push(
+        <Card key={i}
+        onPress={toggle(c[i])}
+        style={{ width: "32%", aspectRatio: 1, alignSelf: "flex-start", marginBottom: spacing.extraSmall }}
+        verticalAlignment="space-between"
+        HeadingComponent={
+          <Icon icon="lightbulb" color={getColor(c[i])} style={{ alignSelf: "center" }} />
+        }
+        footer={c[i].attributes.friendly_name}
+        footerStyle={{ alignSelf: "center" }}
+        FooterTextProps={{ weight: "light", size: "xxs" }} />
+      );
+    }
+    setCards(cards);
+  }
+
+  React.useEffect(() => {
+    getStates();
+  }, []);
 
   return (
     <View style={$container}>
-      <View style={$topContainer}>
-        <Image style={$welcomeLogo} source={welcomeLogo} resizeMode="contain" />
-        <Text
-          testID="welcome-heading"
-          style={$welcomeHeading}
-          tx="welcomeScreen.readyForLaunch"
-          preset="heading"
-        />
-        <Text tx="welcomeScreen.exciting" preset="subheading" />
-        <Image style={$welcomeFace} source={welcomeFace} resizeMode="contain" />
-      </View>
-
-      <View style={[$bottomContainer, $bottomContainerInsets]}>
-        <Text tx="welcomeScreen.postscript" size="md" />
-      </View>
+      <ScrollView>
+        <View style={{ paddingTop: 20, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={$h1}>
+            Simple Home
+          </Text>
+        </View>
+        <View style={$cardContainer}>
+          {cards}
+        </View>
+      </ScrollView>
     </View>
   )
 })
 
 const $container: ViewStyle = {
-  flex: 1,
   backgroundColor: colors.background,
 }
 
-const $topContainer: ViewStyle = {
+const $cardContainer: ViewStyle = {
   flexShrink: 1,
   flexGrow: 1,
-  flexBasis: "57%",
-  justifyContent: "center",
+  justifyContent: "space-between",
+  flexDirection: "row",
+  flexWrap: "wrap",
   paddingHorizontal: spacing.large,
-}
-
-const $bottomContainer: ViewStyle = {
-  flexShrink: 1,
-  flexGrow: 0,
-  flexBasis: "43%",
-  backgroundColor: colors.palette.neutral100,
-  borderTopLeftRadius: 16,
-  borderTopRightRadius: 16,
-  paddingHorizontal: spacing.large,
-  justifyContent: "space-around",
-}
-const $welcomeLogo: ImageStyle = {
-  height: 88,
-  width: "100%",
-  marginBottom: spacing.huge,
-}
-
-const $welcomeFace: ImageStyle = {
-  height: 169,
-  width: 269,
-  position: "absolute",
-  bottom: -47,
-  right: -80,
-  transform: [{ scaleX: isRTL ? -1 : 1 }],
-}
-
-const $welcomeHeading: TextStyle = {
-  marginBottom: spacing.medium,
+  paddingTop: spacing.large,
 }
