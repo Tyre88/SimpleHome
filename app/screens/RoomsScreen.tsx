@@ -19,7 +19,7 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
             filter: "light.liam",
             entityIds: ["camera.liam_2"],
             id: "efgh"
-        },
+        }
     ];
 
     const hassEntityService = new HassEntityService();

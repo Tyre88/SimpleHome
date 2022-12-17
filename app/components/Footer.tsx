@@ -12,12 +12,31 @@ export const Footer: FC<any> = observer(function Footer() {
         return "#C3C3C3";
     };
 
+    const [footerItems, setFooterItems] = React.useState([]);
+
+    const nav = (to: string) => {
+        navigate(to);
+        initFooterItems();
+    };
+
+    React.useEffect(() => {
+        initFooterItems();
+    }, []);
+
+    const initFooterItems = () => {
+        const items = [
+            <Icon icon="home" onPress={() => nav("Home")} color={getColor('Home')} style={$footerIcon} />,
+            <Icon icon="room" onPress={() => nav("Room")} color={getColor('Room')} style={$footerIcon} />,
+            <Icon icon="info" onPress={() => nav("Info")} color={getColor('Info')} style={$footerIcon} />,
+            <Icon icon="settings" onPress={() => nav("Settings")} color={getColor('Settings')} style={$footerIcon} />
+        ];
+
+        setFooterItems(items);
+    };
+
     return (
         <View style={$footer}>
-            <Icon icon="home" onPress={() => navigate("Home")} color={getColor('Home')} style={$footerIcon} />
-            <Icon icon="room" onPress={() => navigate("Room")} color={getColor('Room')} style={$footerIcon} />
-            <Icon icon="info" onPress={() => navigate("Info")} color={getColor('Info')} style={$footerIcon} />
-            <Icon icon="settings" onPress={() => navigate("Settings")} color={getColor('Settings')} style={$footerIcon} />
+            {footerItems}
         </View>
     );
 });
