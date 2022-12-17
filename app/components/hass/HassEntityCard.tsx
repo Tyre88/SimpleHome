@@ -1,18 +1,23 @@
 import { observer } from "mobx-react-lite";
 import React, { FC } from "react"
-import { ImageStyle, TextStyle, View, ViewStyle } from "react-native";
-import { Card, Icon, Text } from "../../components";
+import { Card, Icon, IconTypes, Text } from "../../components";
 import { HassEntity } from "../../models/hass/hass-entity";
-import { HassEntityService } from "../../services/hass/hass-entity-service";
 import { spacing } from "../../theme";
 
 export interface HassEntityCardProps {
-    hassEntity: HassEntity
+    hassEntity: HassEntity;
+    onEntityPress?: (entity: HassEntity) => void;
 }
 
 export const HassEntityCard: FC<HassEntityCardProps> = observer(function HassEntityCard(props: HassEntityCardProps) {
-    const hassEntityService = new HassEntityService();
-    const [color, setColor] = React.useState("black");
+    const getInfoText = (entity: HassEntity): string => {
+        if(entity.entity_id.startsWith("climate.")) {
+            return entity.attributes.current_temperature + "°C";
+        }
+        else {
+            return entity.state;
+        }
+    }
 
     const getColor = (state: string): string => {
         const entity = props.hassEntity;
@@ -27,26 +32,51 @@ export const HassEntityCard: FC<HassEntityCardProps> = observer(function HassEnt
         }
     }
 
-    const toggle = () => () => {
-        hassEntityService.toggle(props.hassEntity).then((e: HassEntity) => {
-            setColor(getColor(e.state));
-        });
+    const getWidth = (): string => {
+        if(props.hassEntity.entity_id.startsWith("camera.")) {
+            return "100%";
+        }
+        else {
+            return "49%";
+        }
     }
 
-    React.useEffect(() => {
-        setColor(getColor(props.hassEntity.state));
-    }, [props.hassEntity.state]);
+    const getAspectRatio = (): number => {
+        if(props.hassEntity.entity_id.startsWith("camera.")) {
+            return 1.85;
+        }
+        else {
+            return 1.3;
+        }
+    }
+
+    const getIcon = (): IconTypes => {
+        if(props.hassEntity.entity_id.startsWith("light.")) {
+            return "lightbulb";
+        }
+        else if(props.hassEntity.entity_id.startsWith("camera.")) {
+            
+        }
+    }
+
+    const toggle = () => () => {
+        if(props.onEntityPress) props.onEntityPress(props.hassEntity);
+    }
     
     return (
         <Card key={props.hassEntity.entity_id}
             onPress={toggle()}
-            style={{ width: "32%", aspectRatio: 1, alignSelf: "flex-start", marginBottom: spacing.extraSmall }}
+            style={{ width: getWidth(), aspectRatio: getAspectRatio(), alignSelf: "flex-start", marginBottom: spacing.extraSmall }}
             verticalAlignment="space-between"
             HeadingComponent={
-            <Icon icon="lightbulb" color={color} style={{ alignSelf: "center" }} />
+            <Icon icon={getIcon()} color={getColor(props.hassEntity.state)} style={{ alignSelf: "center" }} />
             }
-            footer={props.hassEntity.attributes.friendly_name}
-            footerStyle={{ alignSelf: "center" }}
-            FooterTextProps={{ weight: "light", size: "xxs" }} />
+            content={props.hassEntity.attributes.friendly_name}
+            contentStyle={{ alignSelf: "center" }}
+            ContentTextProps={{ weight: "light", size: "xxs" }} 
+            footer={getInfoText(props.hassEntity)}
+            footerStyle={{ color: "#a511dc", textTransform: "capitalize" }}
+            FooterTextProps={{ weight: "light", size: "xxs" }} 
+            />
     );
 });

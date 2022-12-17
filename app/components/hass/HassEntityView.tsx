@@ -3,42 +3,32 @@ import React, { FC } from "react"
 import { ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native";
 import { Icon, Text } from "../../components";
 import { HassEntity } from "../../models/hass/hass-entity";
-import { HassEntityService } from "../../services/hass/hass-entity-service";
+import { $h2, spacing } from "../../theme";
 import { HassEntityCard } from "./HassEntityCard";
 
 export interface HassEntityViewProps {
     filter?: string;
+    entityIds?: string[];
     entities?: HassEntity[];
+    name?: string;
+
+    onEntityPress?: (entity: HassEntity) => void;
 }
 
 export const HassEntityView: FC<HassEntityViewProps> = observer(function HassEntityView(props: HassEntityViewProps) {
-    const [cards, setCards] = React.useState([] as React.ReactElement[]);
-
-    const getEntities = () => {
-        generateCards(props.entities?.filter((e: HassEntity) => e.entity_id.startsWith(props.filter) && e.state !== "unavailable")
-            .sort((a: HassEntity, b: HassEntity) => a.attributes.friendly_name.localeCompare(b.attributes.friendly_name)));
-
-        // hassEntityService.getAll().then((e: HassEntity[]) => {
-          
-        // });
-    }
-
-    const generateCards = (c: HassEntity[]) => {
-        const cards = [];
-        for(let i = 0; i < c?.length; i++) {
-          cards.push(<HassEntityCard hassEntity={c[i]} />);
-        }
-        setCards(cards);
-    }
-
-    React.useEffect(() => {
-        getEntities();
-    }, []);
+    const getFilteredEntities = (): HassEntity[] => {
+        return props.entities?.filter((e: HassEntity) => 
+        ((e.entity_id.startsWith(props.filter) && props.filter?.length > 0) || props.entityIds.includes(e.entity_id))
+        && e.state !== "unavailable")
+        .sort((a: HassEntity, b: HassEntity) => a.entity_id.localeCompare(b.entity_id));
+    };
     
     return (
         <ScrollView>
+            <Text style={[$h2, $entityViewHeader]}>{props.name}</Text>
             <View style={$hassEntityViewWrapper}>
-                {cards}
+                {getFilteredEntities().map((e: HassEntity) => 
+                    <HassEntityCard onEntityPress={props.onEntityPress} key={e.entity_id} hassEntity={e} />)}
             </View>
         </ScrollView>
     );
@@ -48,4 +38,13 @@ const $hassEntityViewWrapper: ViewStyle = {
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: spacing.large,
+    paddingTop: spacing.medium
+}
+
+const $entityViewHeader: TextStyle = {
+    paddingTop: spacing.large,
+    paddingLeft: spacing.large
 }

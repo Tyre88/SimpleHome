@@ -63,7 +63,7 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: false, title: "Simple home" }}
     >
           <Stack.Screen name="Home" component={WelcomeScreen} />
           {/** 🔥 Your screens go here */}

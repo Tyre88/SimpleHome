@@ -1,64 +1,87 @@
 import { observer } from "mobx-react-lite";
 import React, { FC, useEffect } from "react"
 import { View, useWindowDimensions  } from "react-native";
-import { Text } from "../components";
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { HassEntityService } from "../services/hass/hass-entity-service";
 import { HassEntity } from "../models/hass/hass-entity";
 import { HassEntityView } from "../components/hass/HassEntityView";
 
 export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
-    const hassEntityService = new HassEntityService();
+    const rooms = [
+        {
+            name: "Matilda",
+            filter: "light.matilda",
+            entityIds: ["camera.matilda_2"],
+            id: "abcd"
+        },
+        {
+            name: "Liam",
+            filter: "light.liam",
+            entityIds: ["camera.liam_2"],
+            id: "efgh"
+        },
+    ];
 
-    const [views, setViews] = React.useState([]);
+    const hassEntityService = new HassEntityService();
     const [entities, setEntities] = React.useState([] as HassEntity[]);
 
     const getEntities = () => {
         hassEntityService.getAll().then((e: HassEntity[]) => {
             setEntities(e);
+
+            initRooms();
         });
     };
 
-    const FirstRoute = () => (
-        <HassEntityView filter="light.matilda" entities={entities} />
-    );
-    
-    const SecondRoute = () => (
-        <HassEntityView filter="light.liam" entities={entities} />
-    );
+    const initRooms = () => {
+        let rt = [];
 
-    const ThirdRoute = () => (
-        <HassEntityView filter="light.kok" entities={entities} />
-    );
+        rooms.forEach(r => {
+            rt.push({ key: r.id, title: r.name });
+        });
 
-    const FourthRoute = () => (
-        <HassEntityView filter="light.hall" entities={entities} />
-    );
+        setRoutes(rt);
+    };
+
+    const toggleEntity = (entity: HassEntity) => {
+
+        hassEntityService.toggle(entity).then((ee: HassEntity) => {
+
+            const es = entities.map((e: HassEntity) => {
+                if(e.entity_id === entity.entity_id) {
+                    e.state = ee.state;
+                }
     
-    const renderScene = SceneMap({
-        first: FirstRoute,
-        second: SecondRoute,
-        third: ThirdRoute,
-        fourth: FourthRoute,
-    });
+                return e;
+            });
+    
+            setEntities(es);
+
+        });
+    };
+    
+    const renderScene = ({ route }) => {
+        const room = rooms.find(r => r.id === route.key);
+
+        console.log(room);
+
+        return <HassEntityView onEntityPress={toggleEntity} entityIds={room.entityIds} filter={room.filter} name={room.name} entities={entities} />
+    };
     
     const layout = useWindowDimensions();
 
     const [index, setIndex] = React.useState(0);
-    const [routes] = React.useState([
-        { key: 'first', title: 'Matilda' },
-        { key: 'second', title: 'Liam' },
-        { key: 'third', title: 'Kök' },
-        { key: 'fourth', title: 'Hall' },
+    const [routes, setRoutes] = React.useState([
     ]);
 
     React.useEffect(() => {
-        getEntities();
+        getEntities();    
     }, []);
 
 
     return (
         <TabView
+            tabBarPosition="bottom"
             navigationState={{ index, routes }}
             renderScene={renderScene}
             onIndexChange={setIndex}

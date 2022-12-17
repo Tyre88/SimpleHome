@@ -17,6 +17,7 @@ import { api } from "../services/api/api"
 import { HassEntity } from "../models/hass/hass-entity"
 import  { HassEntityService } from "../services/hass/hass-entity-service"
 import { $h1 } from "../theme/texts"
+import { HassEntityCard } from "../components/hass/HassEntityCard"
 
 const welcomeLogo = require("../../assets/images/logo.png")
 const welcomeFace = require("../../assets/images/welcome-face.png")
@@ -25,12 +26,18 @@ const welcomeFace = require("../../assets/images/welcome-face.png")
 export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(
 ) {
   const hassEntityService = new HassEntityService();
+  const entityTypes = [
+    "light", 
+    // "camera",
+    // "climate",
+  ];
 
   const [cards, setCards] = React.useState([] as React.ReactElement[]);
 
   const getStates = () => {
     hassEntityService.getAll().then((e: HassEntity[]) => {
-      generateCards(e.filter((e: HassEntity) => e.entity_id.startsWith("light.") && e.state !== "unavailable")
+      generateCards(e.filter((e: HassEntity) => entityTypes.includes(e.entity_id.substring(0, e.entity_id.indexOf("."))) 
+        && e.state !== "unavailable")
         .sort((a: HassEntity, b: HassEntity) => a.attributes.friendly_name.localeCompare(b.attributes.friendly_name)));
     });
   }
@@ -58,16 +65,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
     const cards = [];
     for(let i = 0; i < c.length; i++) {
       cards.push(
-        <Card key={i}
-        onPress={toggle(c[i])}
-        style={{ width: "32%", aspectRatio: 1, alignSelf: "flex-start", marginBottom: spacing.extraSmall }}
-        verticalAlignment="space-between"
-        HeadingComponent={
-          <Icon icon="lightbulb" color={getColor(c[i])} style={{ alignSelf: "center" }} />
-        }
-        footer={c[i].attributes.friendly_name}
-        footerStyle={{ alignSelf: "center" }}
-        FooterTextProps={{ weight: "light", size: "xxs" }} />
+        <HassEntityCard key={c[i].entity_id} hassEntity={c[i]}></HassEntityCard>
       );
     }
     setCards(cards);
