@@ -25,7 +25,9 @@ export const HassEntityView: FC<HassEntityViewProps> = observer(function HassEnt
     
     return (
         <ScrollView>
-            <Text style={[$h2, $entityViewHeader]}>{props.name}</Text>
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                <Text style={[$h2, $entityViewHeader]}>{props.name}</Text>
+            </View>
             <View style={$hassEntityViewWrapper}>
                 {getFilteredEntities().map((e: HassEntity) => 
                     <HassEntityCard onEntityPress={props.onEntityPress} key={e.entity_id} hassEntity={e} />)}
@@ -46,5 +48,6 @@ const $hassEntityViewWrapper: ViewStyle = {
 
 const $entityViewHeader: TextStyle = {
     paddingTop: spacing.large,
-    paddingLeft: spacing.large
+    paddingLeft: spacing.large,
+    paddingRight: spacing.large,
 }

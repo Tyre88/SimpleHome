@@ -24,6 +24,7 @@ import { Footer } from "../components/Footer"
 import { spacing } from "../theme"
 import { RoomsScreen } from "../screens/RoomsScreen"
 import { SettingsScreen } from "../screens/SettingsScreen"
+import { EditRoomsScreen } from "../screens/EditRoomsScreen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -44,6 +45,8 @@ export type AppStackParamList = {
   Info: undefined,
   Room: undefined,
   Settings: undefined,
+
+  EditRooms: undefined,
 }
 
 /**
@@ -70,6 +73,8 @@ const AppStack = observer(function AppStack() {
           <Stack.Screen name="Room" component={RoomsScreen} />
           <Stack.Screen name="Info" component={InfoScreen} />
           <Stack.Screen name="Settings" component={SettingsScreen} />
+
+          <Stack.Screen name="EditRooms" component={EditRoomsScreen} />
     </Stack.Navigator>
   )
 })

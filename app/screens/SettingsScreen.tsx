@@ -6,6 +6,7 @@ import { $button, $margin } from "../theme";
 import { $h1 } from "../theme/texts";
 import { loadString, saveString } from "../utils/storage";
 import { api } from "../services/api/api";
+import { navigate } from "../navigators";
 
 export const SettingsScreen: FC<any> = observer(function SettingsScreen() {
 
@@ -51,6 +52,12 @@ export const SettingsScreen: FC<any> = observer(function SettingsScreen() {
                 <Button text="Save" 
                     onPress={() => save()}
                     style={[$button.primary, { width: "100%" }]} />
+            </View>
+
+            <View style={$settingsContainerStyle}>
+                <Button text="Edit rooms" 
+                    onPress={() => navigate("EditRooms")}
+                    style={[$button.secondary, { width: "100%" }]} />
             </View>
         </View>
     );

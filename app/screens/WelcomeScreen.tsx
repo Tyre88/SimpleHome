@@ -14,66 +14,38 @@ import { Api } from "../services/api"
 import { colors, spacing } from "../theme"
 import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
 import { api } from "../services/api/api"
-import { HassEntity } from "../models/hass/hass-entity"
-import  { HassEntityService } from "../services/hass/hass-entity-service"
+import hassEntityStore, { HassEntity } from "../models/hass/hass-entity"
+import  { hassEntityService } from "../services/hass/hass-entity-service"
 import { $h1 } from "../theme/texts"
 import { HassEntityCard } from "../components/hass/HassEntityCard"
 
-const welcomeLogo = require("../../assets/images/logo.png")
-const welcomeFace = require("../../assets/images/welcome-face.png")
 
-
-export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(
+export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(self
 ) {
-  const hassEntityService = new HassEntityService();
   const entityTypes = [
     "light", 
     // "camera",
     // "climate",
   ];
 
-  const [cards, setCards] = React.useState([] as React.ReactElement[]);
-
-  const getStates = () => {
-    hassEntityService.getAll().then((e: HassEntity[]) => {
-      generateCards(e.filter((e: HassEntity) => entityTypes.includes(e.entity_id.substring(0, e.entity_id.indexOf("."))) 
-        && e.state !== "unavailable")
-        .sort((a: HassEntity, b: HassEntity) => a.attributes.friendly_name.localeCompare(b.attributes.friendly_name)));
-    });
-  }
-
   const toggle = (entity: HassEntity) => () => {
     hassEntityService.toggle(entity).then((e: HassEntity) => {
       console.log(e);
-      getStates();
+      
     });
   }
 
-  const getColor = (entity: HassEntity): string => {
-    if(entity.state === "on") { 
-      if(entity.attributes.rgb_color) {
-        return `rgb(${entity.attributes.rgb_color[0]}, ${entity.attributes.rgb_color[1]}, ${entity.attributes.rgb_color[2]})`;
-      }
-      return "#ffcc00";
-    }
-    else if (entity.state === "off") {
-      return "grey";
-    }
-  }
+  const generateCards = () => {
+    let cards = [];
+    const entities = hassEntityStore.entities
+      .filter((e: HassEntity) => entityTypes.includes(e.entity_id.substring(0, e.entity_id.indexOf("."))) && e.state !== "unavailable")
+      .sort((a: HassEntity, b: HassEntity) => a.attributes.friendly_name.localeCompare(b.attributes.friendly_name));
 
-  const generateCards = (c: HassEntity[]) => {
-    const cards = [];
-    for(let i = 0; i < c.length; i++) {
-      cards.push(
-        <HassEntityCard key={c[i].entity_id} hassEntity={c[i]}></HassEntityCard>
-      );
+    for(let i = 0; i < entities.length; i++) {
+      cards.push(<HassEntityCard key={entities[i].entity_id} hassEntity={entities[i]}></HassEntityCard>);
     }
-    setCards(cards);
-  }
-
-  React.useEffect(() => {
-    getStates();
-  }, []);
+    return cards;
+  };
 
   return (
     <View style={$container}>
@@ -84,7 +56,8 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
           </Text>
         </View>
         <View style={$cardContainer}>
-          {cards}
+          {generateCards()}
+          {/* {cards} */}
         </View>
       </ScrollView>
     </View>

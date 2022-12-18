@@ -1,7 +1,7 @@
 import { HassEntity } from "../../models/hass/hass-entity";
 import { api } from "../api/api";
 
-export class HassEntityService {
+class HassEntityService {
     public toggle(entity: HassEntity): Promise<any> {
         console.log(`${api.apisauce.getBaseURL()}/api/services/light/toggle`);
         return api.apisauce.post(`${api.apisauce.getBaseURL()}/api/services/light/toggle`, { entity_id: entity.entity_id })
@@ -14,3 +14,5 @@ export class HassEntityService {
         });
     }
 }
+
+export const hassEntityService = new HassEntityService();

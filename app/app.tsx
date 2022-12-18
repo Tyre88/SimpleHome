@@ -22,6 +22,8 @@ import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import { setupReactotron } from "./services/reactotron"
 import Config from "./config"
+import hassEntityStore, { HassEntity } from "./models/hass/hass-entity"
+import  { hassEntityService } from "./services/hass/hass-entity-service"
 
 // Set up Reactotron, which is a free desktop app for inspecting and debugging
 // React Native apps. Learn more here: https://github.com/infinitered/reactotron
@@ -100,6 +102,14 @@ function App(props: AppProps) {
     prefixes: [prefix],
     config,
   }
+
+  hassEntityService.getAll().then((entities: HassEntity[]) => {
+    if(entities.length > 0) {
+      hassEntityStore.setEntities(entities);
+    }
+  }).catch((error) => {
+    console.log(error);
+  });
 
   // otherwise, we're ready to render the app
   return (

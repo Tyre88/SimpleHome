@@ -2,12 +2,13 @@ import { observer } from "mobx-react-lite";
 import React, { FC, useEffect } from "react"
 import { View, useWindowDimensions  } from "react-native";
 import { TabView, SceneMap } from 'react-native-tab-view';
-import { HassEntityService } from "../services/hass/hass-entity-service";
+import { hassEntityService } from "../services/hass/hass-entity-service";
 import { HassEntity } from "../models/hass/hass-entity";
 import { HassEntityView } from "../components/hass/HassEntityView";
+import { RoomModel } from "../models/core/RoomModel";
 
 export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
-    const rooms = [
+    const rooms: RoomModel[] = [
         {
             name: "Matilda",
             filter: "light.matilda",
@@ -22,7 +23,6 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
         }
     ];
 
-    const hassEntityService = new HassEntityService();
     const [entities, setEntities] = React.useState([] as HassEntity[]);
 
     const getEntities = () => {
