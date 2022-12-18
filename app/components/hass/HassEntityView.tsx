@@ -18,7 +18,7 @@ export interface HassEntityViewProps {
 export const HassEntityView: FC<HassEntityViewProps> = observer(function HassEntityView(props: HassEntityViewProps) {
     const getFilteredEntities = (): HassEntity[] => {
         return props.entities?.filter((e: HassEntity) => 
-        ((e.entity_id.startsWith(props.filter) && props.filter?.length > 0) || props.entityIds.includes(e.entity_id))
+        ((e.entity_id.startsWith(props.filter) && props.filter?.length > 0) || props.entityIds?.includes(e.entity_id))
         && e.state !== "unavailable")
         .sort((a: HassEntity, b: HassEntity) => a.entity_id.localeCompare(b.entity_id));
     };

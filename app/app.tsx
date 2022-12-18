@@ -103,13 +103,7 @@ function App(props: AppProps) {
     config,
   }
 
-  hassEntityService.getAll().then((entities: HassEntity[]) => {
-    if(entities.length > 0) {
-      hassEntityStore.setEntities(entities);
-    }
-  }).catch((error) => {
-    console.log(error);
-  });
+  hassEntityStore.fetchEntities();
 
   // otherwise, we're ready to render the app
   return (

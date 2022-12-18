@@ -46,7 +46,6 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
     const toggleEntity = (entity: HassEntity) => {
 
         hassEntityService.toggle(entity).then((ee: HassEntity) => {
-
             const es = entities.map((e: HassEntity) => {
                 if(e.entity_id === entity.entity_id) {
                     e.state = ee.state;
@@ -56,7 +55,6 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
             });
     
             setEntities(es);
-
         });
     };
     
