@@ -1,11 +1,12 @@
 import { observer } from "mobx-react-lite";
-import React, { FC, useEffect } from "react"
-import { View, useWindowDimensions  } from "react-native";
-import { TabView, SceneMap } from 'react-native-tab-view';
+import React, { FC } from "react"
+import { useWindowDimensions  } from "react-native";
+import { TabView } from 'react-native-tab-view';
 import { hassEntityService } from "../services/hass/hass-entity-service";
 import { HassEntity } from "../models/hass/hass-entity";
 import { HassEntityView } from "../components/hass/HassEntityView";
 import { RoomModel } from "../models/core/RoomModel";
+import { TabBar } from "../components/hass/TabBar";
 
 export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
     const rooms: RoomModel[] = [
@@ -20,6 +21,18 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
             filter: "light.liam",
             entityIds: ["camera.liam_2"],
             id: "efgh"
+        },
+        {
+            name: "Solceller",
+            filter: "",
+            entityIds: ["sensor.pv_power", "sensor.solaredge_current_power", "sensor.total_solar_power", "sensor.electricity_price_tallgatan_9"],
+            id: "ijkl"
+        },
+        {
+            name: "Hallen toa",
+            filter: "light.hallen_toa",
+            entityIds: [],
+            id: "mnop"
         }
     ];
 
@@ -34,7 +47,7 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
     };
 
     const initRooms = () => {
-        let rt = [];
+        const rt = [];
 
         rooms.forEach(r => {
             rt.push({ key: r.id, title: r.name });
@@ -46,7 +59,7 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
     const toggleEntity = (entity: HassEntity) => {
 
         hassEntityService.toggle(entity).then((ee: HassEntity) => {
-            const es = entities.map((e: HassEntity) => {
+            const es = entities?.map((e: HassEntity) => {
                 if(e.entity_id === entity.entity_id) {
                     e.state = ee.state;
                 }
@@ -79,6 +92,7 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
 
     return (
         <TabView
+            renderTabBar={props => <TabBar {...props} />}
             tabBarPosition="bottom"
             navigationState={{ index, routes }}
             renderScene={renderScene}

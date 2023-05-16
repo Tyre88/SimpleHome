@@ -112,6 +112,7 @@ export const iconRegistry = {
   info: require("../../assets/icons/info.png"),
   room: require("../../assets/icons/room.png"),
   add: require("../../assets/icons/add.png"),
+  dot: require("../../assets/icons/dot.png"),
 }
 
 const $imageStyle: ImageStyle = {

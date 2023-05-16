@@ -2,13 +2,13 @@ import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { colors, spacing } from "../theme"
+import { colors } from "../theme"
 import hassEntityStore, { HassEntity } from "../models/hass/hass-entity"
 import  { hassEntityService } from "../services/hass/hass-entity-service"
 import { HassEntityView } from "../components/hass/HassEntityView"
 
 
-export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(self
+export const WelcomeScreen: FC<any> = observer(function WelcomeScreen(
 ) {
   const entityTypes = [
     "light", 

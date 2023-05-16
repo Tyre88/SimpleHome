@@ -17,6 +17,7 @@ export interface HassEntityViewProps {
 
 export const HassEntityView: FC<HassEntityViewProps> = observer(function HassEntityView(props: HassEntityViewProps) {
     const getFilteredEntities = (): HassEntity[] => {
+        console.log('getFilteredEntities', props.entities);
         return props.entities?.filter((e: HassEntity) => 
         ((e.entity_id.startsWith(props.filter) && props.filter?.length > 0) || props.entityIds?.includes(e.entity_id))
         && e.state !== "unavailable")
@@ -29,7 +30,7 @@ export const HassEntityView: FC<HassEntityViewProps> = observer(function HassEnt
                 <Text style={[$h2, $entityViewHeader]}>{props.name}</Text>
             </View>
             <View style={$hassEntityViewWrapper}>
-                {getFilteredEntities().map((e: HassEntity) => 
+                {getFilteredEntities()?.map((e: HassEntity) => 
                     <HassEntityCard onEntityPress={props.onEntityPress} key={e.entity_id} hassEntity={e} />)}
             </View>
         </ScrollView>
