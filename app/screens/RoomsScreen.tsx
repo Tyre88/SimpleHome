@@ -39,6 +39,12 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
             filter: "",
             entityIds: ["switch.outlet_1"],
             id: "qrst"
+        },
+        {
+            name: "Climate",
+            filter: "climate.",
+            entityIds: [],
+            id: "uvwx"
         }
     ];
 
@@ -66,7 +72,7 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
 
         hassEntityService.toggle(entity).then((ee: HassEntity) => {
             const es = entities?.map((e: HassEntity) => {
-                if(e.entity_id === entity.entity_id) {
+                if(e !== null && e.entity_id === entity.entity_id) {
                     e.state = ee.state;
                 }
     

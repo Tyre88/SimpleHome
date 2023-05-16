@@ -1,8 +1,9 @@
 import { observer } from "mobx-react-lite";
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { Card, Icon, IconTypes, Text } from "../../components";
 import { HassEntity } from "../../models/hass/hass-entity";
 import { spacing } from "../../theme";
+import { hassEntityService } from "../../services/hass/hass-entity-service";
 
 export interface HassEntityCardProps {
     hassEntity: HassEntity;
@@ -10,6 +11,8 @@ export interface HassEntityCardProps {
 }
 
 export const HassEntityCard: FC<HassEntityCardProps> = observer(function HassEntityCard(props: HassEntityCardProps) {
+    const [image, setImage] = React.useState<string | undefined>(undefined);
+
     const getInfoText = (entity: HassEntity): string => {
         if(entity.entity_id.startsWith("climate.")) {
             return entity.attributes.current_temperature + "°C";
@@ -34,6 +37,7 @@ export const HassEntityCard: FC<HassEntityCardProps> = observer(function HassEnt
 
     const getWidth = (): string => {
         if(props.hassEntity.entity_id.startsWith("camera.")) {
+            console.log("CAMERA", props.hassEntity);
             return "100%";
         }
         else {

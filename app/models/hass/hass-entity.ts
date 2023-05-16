@@ -9,6 +9,7 @@ export class HassEntity {
     last_changed: string;
     last_updated: string;
     context: any;
+    entity_picture: string;
     get key(): string {
         return this.entity_id;
     }
