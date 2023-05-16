@@ -45,6 +45,12 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
             filter: "climate.",
             entityIds: [],
             id: "uvwx"
+        },
+        {
+            name: "TV",
+            filter: "light.tv_",
+            entityIds: [],
+            id: "yzåäö"
         }
     ];
 

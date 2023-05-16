@@ -1,9 +1,13 @@
 import { observer } from "mobx-react-lite";
-import React, { FC, useEffect } from "react"
-import { Card, Icon, IconTypes, Text } from "../../components";
-import { HassEntity } from "../../models/hass/hass-entity";
+import React, { FC, useEffect, useState } from "react"
+import { Card, Icon, IconTypes, Text, Toggle } from "../../components";
+import hassEntityStore, { HassEntity } from "../../models/hass/hass-entity";
 import { spacing } from "../../theme";
 import { hassEntityService } from "../../services/hass/hass-entity-service";
+import { Switch, View } from "react-native";
+import Dialog from "react-native-dialog";
+import { SwitchDialogComponent } from "../DialogComponents/switch-dialog-component";
+import { LightDialogComponent } from "../DialogComponents/light-dialog-component";
 
 export interface HassEntityCardProps {
     hassEntity: HassEntity;
@@ -11,7 +15,7 @@ export interface HassEntityCardProps {
 }
 
 export const HassEntityCard: FC<HassEntityCardProps> = observer(function HassEntityCard(props: HassEntityCardProps) {
-    const [image, setImage] = React.useState<string | undefined>(undefined);
+    const [showDialog, setShowDialog] = React.useState<boolean>(false);
 
     const getInfoText = (entity: HassEntity): string => {
         if(entity.entity_id.startsWith("climate.")) {
@@ -37,7 +41,6 @@ export const HassEntityCard: FC<HassEntityCardProps> = observer(function HassEnt
 
     const getWidth = (): string => {
         if(props.hassEntity.entity_id.startsWith("camera.")) {
-            console.log("CAMERA", props.hassEntity);
             return "100%";
         }
         else {
@@ -66,21 +69,59 @@ export const HassEntityCard: FC<HassEntityCardProps> = observer(function HassEnt
     const toggle = () => () => {
         if(props.onEntityPress) props.onEntityPress(props.hassEntity);
     }
+
+    const longPress = () => { 
+        setShowDialog(true);
+    }
+
+    const cancelDialog = () => {
+        setShowDialog(false);
+        hassEntityStore.fetchEntities();
+    }
     
+    function getDialogComponent(hassEntity: HassEntity): React.ReactNode {
+        switch(hassEntity.entity_id.split(".")[0]) {
+            case "light":
+                return <LightDialogComponent hassEntity={props.hassEntity} toggle={props.onEntityPress}></LightDialogComponent>
+            case "switch":
+                return <SwitchDialogComponent hassEntity={props.hassEntity} toggle={props.onEntityPress}></SwitchDialogComponent>
+            default: 
+                return <Text>Not implemented</Text>
+        }
+        return <SwitchDialogComponent hassEntity={props.hassEntity} toggle={props.onEntityPress}></SwitchDialogComponent>
+        return (
+            <Switch
+                onValueChange={toggle()}
+                value={props.hassEntity.state === "on"}>
+            </Switch>
+        )
+    }
+
     return (
-        <Card key={props.hassEntity.entity_id}
-            onPress={toggle()}
-            style={{ width: getWidth(), aspectRatio: getAspectRatio(), alignSelf: "flex-start", marginBottom: spacing.extraSmall }}
-            verticalAlignment="space-between"
-            HeadingComponent={
-            <Icon icon={getIcon()} color={getColor(props.hassEntity.state)} style={{ alignSelf: "center" }} />
-            }
-            content={props.hassEntity.attributes.friendly_name}
-            contentStyle={{ alignSelf: "center" }}
-            ContentTextProps={{ weight: "light", size: "xxs" }} 
-            footer={getInfoText(props.hassEntity)}
-            footerStyle={{ color: "#a511dc", textTransform: "capitalize" }}
-            FooterTextProps={{ weight: "light", size: "xxs" }} 
-            />
+        <View style={{ width: getWidth(), aspectRatio: getAspectRatio(), alignSelf: "flex-start", marginBottom: spacing.extraSmall,
+             }}>
+            <Card key={props.hassEntity.entity_id}
+                onPress={toggle()}
+                onLongPress={() => longPress()}
+                style={{ width: "100%", aspectRatio: getAspectRatio(), alignSelf: "flex-start", marginBottom: spacing.extraSmall }}
+                verticalAlignment="space-between"
+                HeadingComponent={
+                <Icon icon={getIcon()} color={getColor(props.hassEntity.state)} style={{ alignSelf: "center" }} />
+                }
+                content={props.hassEntity.attributes.friendly_name}
+                contentStyle={{ alignSelf: "center" }}
+                ContentTextProps={{ weight: "light", size: "xxs" }} 
+                footer={getInfoText(props.hassEntity)}
+                footerStyle={{ color: "#a511dc", textTransform: "capitalize" }}
+                FooterTextProps={{ weight: "light", size: "xxs" }} 
+                />
+            <Dialog.Container visible={showDialog}>
+                <Dialog.Title>{props.hassEntity.attributes.friendly_name}</Dialog.Title>
+                <Dialog.Description>
+                    {getDialogComponent(props.hassEntity)}
+                </Dialog.Description>
+                <Dialog.Button label="Cancel" onPress={cancelDialog} />
+            </Dialog.Container>
+        </View>
     );
 });

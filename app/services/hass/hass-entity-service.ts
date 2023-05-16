@@ -26,6 +26,11 @@ class HassEntityService {
             return response.data as HassEntity[];
         });
     }
+
+    public setState(state: any): Promise<any> {
+        return api.apisauce.post(`${api.apisauce.getBaseURL()}/api/states/${state.entity_id}`, state)
+            .then((response) => { return response.data; });
+    }
 }
 
 export const hassEntityService = new HassEntityService();

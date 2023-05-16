@@ -63,6 +63,7 @@
     "react": "18.0.0",
     "react-native": "0.69.7",
     "react-native-bootsplash": "4.3.2",
+    "react-native-dialog": "^9.3.0",
     "react-native-gesture-handler": "~2.5.0",
     "react-native-pager-view": "5.4.24",
     "react-native-reanimated": "~2.9.1",
@@ -71,7 +72,8 @@
     "react-native-tab-view": "^3.3.4",
     "reactotron-mst": "3.1.4",
     "reactotron-react-js": "^3.3.7",
-    "reactotron-react-native": "5.0.3"
+    "reactotron-react-native": "5.0.3",
+    "reanimated-color-picker": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.0",
