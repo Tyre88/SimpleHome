@@ -20,21 +20,22 @@ export const LightDialogComponent: FC<DialogComponentProps> = observer(function 
         console.log(colorKit.RGB(color).array());
         const rgba = colorKit.RGB(color).array();
         const rgb = [rgba[0], rgba[1], rgba[2]];
-
-        hassEntityService.setState({
+        const state = {
             entity_id: props.hassEntity.entity_id,
-            state: "on",
-            attributes: {
-                ...props.hassEntity.attributes,
-                rgb_color: rgb,
-                brightness: brightness,
-                hs_color: null,
-                xy_color: null
-            }
-        }).then((d) => {
+            rgb_color: rgb
+        };
+
+        console.log(state);
+
+        hassEntityService.callService("light", "turn_on", state).then((d) => {
             console.log('CHANGED COLOR');
             console.log(d);
         });
+
+        // hassEntityService.setState(state).then((d) => {
+        //     console.log('CHANGED COLOR');
+        //     console.log(d);
+        // });
     }
 
     useEffect(() => {
