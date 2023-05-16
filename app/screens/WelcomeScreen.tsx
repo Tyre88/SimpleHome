@@ -17,10 +17,7 @@ export const WelcomeScreen: FC<any> = observer(function WelcomeScreen(
   ];
 
   const toggle = (entity: HassEntity) => {
-    console.log('TOGGLE');
-    console.log(entity);
     hassEntityService.toggle(entity).then((e: HassEntity) => {
-      console.log(e);
       hassEntityStore.updateEntity(e);
     });
   }

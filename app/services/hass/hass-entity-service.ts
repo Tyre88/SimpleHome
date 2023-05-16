@@ -3,9 +3,12 @@ import { api } from "../api/api";
 
 class HassEntityService {
     public toggle(entity: HassEntity): Promise<any> {
-        console.log(`${api.apisauce.getBaseURL()}/api/services/light/toggle`);
-        return api.apisauce.post(`${api.apisauce.getBaseURL()}/api/services/light/toggle`, { entity_id: entity.entity_id })
+        return api.apisauce.post(`${api.apisauce.getBaseURL()}/api/services/${this.getDomain(entity)}/toggle`, { entity_id: entity.entity_id })
             .then((response) => { return response.data[0]; });
+    }
+
+    private getDomain(entity: HassEntity): string {
+        return entity.entity_id.split('.')[0];
     }
 
     public getAll(): Promise<HassEntity[]> {

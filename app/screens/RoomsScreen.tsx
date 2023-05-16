@@ -33,6 +33,12 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
             filter: "light.hallen_toa",
             entityIds: [],
             id: "mnop"
+        },
+        {
+            name: "Kontoret",
+            filter: "",
+            entityIds: ["switch.outlet_1"],
+            id: "qrst"
         }
     ];
 
@@ -73,9 +79,6 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
     
     const renderScene = ({ route }) => {
         const room = rooms.find(r => r.id === route.key);
-
-        console.log(room);
-
         return <HassEntityView onEntityPress={toggleEntity} entityIds={room.entityIds} filter={room.filter} name={room.name} entities={entities} />
     };
     

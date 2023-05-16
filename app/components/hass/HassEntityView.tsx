@@ -17,7 +17,6 @@ export interface HassEntityViewProps {
 
 export const HassEntityView: FC<HassEntityViewProps> = observer(function HassEntityView(props: HassEntityViewProps) {
     const getFilteredEntities = (): HassEntity[] => {
-        console.log('getFilteredEntities', props.entities);
         return props.entities?.filter((e: HassEntity) => 
         ((e.entity_id.startsWith(props.filter) && props.filter?.length > 0) || props.entityIds?.includes(e.entity_id))
         && e.state !== "unavailable")
@@ -48,7 +47,7 @@ const $hassEntityViewWrapper: ViewStyle = {
 }
 
 const $entityViewHeader: TextStyle = {
-    paddingTop: spacing.large,
+    paddingTop: spacing.huge,
     paddingLeft: spacing.large,
     paddingRight: spacing.large,
 }
