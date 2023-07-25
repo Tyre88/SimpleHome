@@ -50,6 +50,8 @@ export const SettingsScreen: FC<any> = observer(function SettingsScreen() {
                 style={$settingsTextField} 
                 label="HASS TOKEN"
                 placeholder="HASS TOKEN" 
+                multiline={true}
+                numberOfLines={7}
                 containerStyle={$settingsContainerStyle} />
 
             <View style={$settingsContainerStyle}>
