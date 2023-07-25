@@ -39,6 +39,7 @@
     "@expo-google-fonts/space-grotesk": "^0.2.2",
     "@expo/webpack-config": "^0.17.0",
     "@react-native-async-storage/async-storage": "^1.17.3",
+    "@react-native-community/slider": "^4.4.2",
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/native": "~6.0.1",
     "@react-navigation/native-stack": "^6.0.2",
@@ -63,6 +64,7 @@
     "react": "18.0.0",
     "react-native": "0.69.7",
     "react-native-bootsplash": "4.3.2",
+    "react-native-dialog": "^9.3.0",
     "react-native-gesture-handler": "~2.5.0",
     "react-native-pager-view": "5.4.24",
     "react-native-reanimated": "~2.9.1",
@@ -71,7 +73,8 @@
     "react-native-tab-view": "^3.3.4",
     "reactotron-mst": "3.1.4",
     "reactotron-react-js": "^3.3.7",
-    "reactotron-react-native": "5.0.3"
+    "reactotron-react-native": "5.0.3",
+    "reanimated-color-picker": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.0",

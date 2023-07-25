@@ -12,7 +12,7 @@
 import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
-import React from "react"
+import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
@@ -23,7 +23,6 @@ import { customFontsToLoad } from "./theme"
 import { setupReactotron } from "./services/reactotron"
 import Config from "./config"
 import hassEntityStore, { HassEntity } from "./models/hass/hass-entity"
-import  { hassEntityService } from "./services/hass/hass-entity-service"
 
 // Set up Reactotron, which is a free desktop app for inspecting and debugging
 // React Native apps. Learn more here: https://github.com/infinitered/reactotron

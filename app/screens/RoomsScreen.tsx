@@ -7,9 +7,10 @@ import { HassEntity } from "../models/hass/hass-entity";
 import { HassEntityView } from "../components/hass/HassEntityView";
 import { RoomModel } from "../models/core/RoomModel";
 import { TabBar } from "../components/hass/TabBar";
+import { load } from "../utils/storage";
 
 export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
-    const rooms: RoomModel[] = [
+    const [rooms, setRooms] = React.useState<RoomModel[]>([
         {
             name: "Matilda",
             filter: "light.matilda",
@@ -45,16 +46,20 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
             filter: "climate.",
             entityIds: [],
             id: "uvwx"
+        },
+        {
+            name: "TV",
+            filter: "light.tv_",
+            entityIds: [],
+            id: "yzåäö"
         }
-    ];
+    ]);
 
     const [entities, setEntities] = React.useState([] as HassEntity[]);
 
     const getEntities = () => {
         hassEntityService.getAll().then((e: HassEntity[]) => {
             setEntities(e);
-
-            initRooms();
         });
     };
 
@@ -84,19 +89,29 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
     };
     
     const renderScene = ({ route }) => {
-        const room = rooms.find(r => r.id === route.key);
+        console.log("ROUTE", route);
+        const room = rooms.find(r => r.id === route.key) ?? rooms[0];
         return <HassEntityView onEntityPress={toggleEntity} entityIds={room.entityIds} filter={room.filter} name={room.name} entities={entities} />
     };
     
     const layout = useWindowDimensions();
 
     const [index, setIndex] = React.useState(0);
-    const [routes, setRoutes] = React.useState([
-    ]);
+    const [routes, setRoutes] = React.useState([]);
 
     React.useEffect(() => {
-        getEntities();    
+        getEntities();
+        load('ROOMS').then((value) => {
+            if (value) {
+                const v = JSON.parse(value);
+                setRooms([...v]);
+            }
+        }); 
     }, []);
+
+    React.useEffect(() => {
+        initRooms();
+    }, [rooms]);
 
 
     return (
