@@ -15,7 +15,7 @@ export const Footer: FC<any> = observer(function Footer() {
     const [footerItems, setFooterItems] = React.useState([]);
 
     const nav = (to: string) => {
-        navigate(to);
+        navigate(to, { uuid: Math.random() });
         initFooterItems();
     };
 

@@ -6,7 +6,7 @@ import { RoomModel } from "../models/core/RoomModel";
 import { $h1, $margin, spacing } from "../theme";
 import { load, save } from "../utils/storage";
 import { ScrollView } from "react-native-gesture-handler";
-import { navigate } from "../navigators";
+import { navigate, resetRoot } from "../navigators";
 
 export const EditRoomsScreen: FC<any> = observer(function EditRoomsScreen(route) {
 
@@ -24,7 +24,7 @@ export const EditRoomsScreen: FC<any> = observer(function EditRoomsScreen(route)
 
     const addRoom = () => {
         const room: RoomModel = {
-            name: "New room",
+            name: "",
             filter: "",
             entityIds: [],
             id: Math.random().toString(36).substring(7)
@@ -39,6 +39,10 @@ export const EditRoomsScreen: FC<any> = observer(function EditRoomsScreen(route)
         setRooms(newRooms);
 
         save('ROOMS', JSON.stringify(newRooms));
+
+        resetRoot();
+
+        navigate("EditRoom", { itemId: room.id });
     };
 
     return (

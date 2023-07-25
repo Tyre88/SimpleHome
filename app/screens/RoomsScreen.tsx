@@ -9,7 +9,7 @@ import { RoomModel } from "../models/core/RoomModel";
 import { TabBar } from "../components/hass/TabBar";
 import { load } from "../utils/storage";
 
-export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
+export const RoomsScreen: FC<any> = observer(function RoomsScreen(route) {
     const [rooms, setRooms] = React.useState<RoomModel[]>([
         {
             name: "Matilda",
@@ -107,7 +107,7 @@ export const RoomsScreen: FC<any> = observer(function RoomsScreen() {
                 setRooms([...v]);
             }
         }); 
-    }, []);
+    }, [route]);
 
     React.useEffect(() => {
         initRooms();
