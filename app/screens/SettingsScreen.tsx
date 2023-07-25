@@ -10,8 +10,8 @@ import { navigate } from "../navigators";
 
 export const SettingsScreen: FC<any> = observer(function SettingsScreen() {
 
-    const [baseURL, setBaseURL] = React.useState<string>("");
-    const [token, setToken] = React.useState<string>("");
+    const [baseURL, setBaseURL] = React.useState<string>("https://disgaea.duckdns.org:8123");
+    const [token, setToken] = React.useState<string>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI4ZjllYjRhMmU3Zjk0MGEyOTBjZjkyMDNiOGIyYWU4OSIsImlhdCI6MTY4NDIyMTUyMSwiZXhwIjoxOTk5NTgxNTIxfQ.FPqe7d4_4ARmVrYo1CXdbGhmot8kYrd8458Y422fOWE");
 
     const save = () => {
         saveString('BASE_URL', baseURL);
@@ -22,11 +22,15 @@ export const SettingsScreen: FC<any> = observer(function SettingsScreen() {
 
     React.useEffect(() => {
         loadString('BASE_URL').then((value) => {
-            setBaseURL(value);
+            if(value) {
+                setBaseURL(value);
+            }
         });
 
         loadString('API_TOKEN').then((value) => {
-            setToken(value);
+            if(value) {
+                setToken(value);
+            }
         });
     }, []);
 

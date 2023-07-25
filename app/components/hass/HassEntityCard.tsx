@@ -8,6 +8,8 @@ import { Switch, View } from "react-native";
 import Dialog from "react-native-dialog";
 import { SwitchDialogComponent } from "../DialogComponents/switch-dialog-component";
 import { LightDialogComponent } from "../DialogComponents/light-dialog-component";
+import {Dimensions} from 'react-native';
+import { CameraDialogComponent } from "../DialogComponents/camera-dialog-component";
 
 export interface HassEntityCardProps {
     hassEntity: HassEntity;
@@ -44,7 +46,12 @@ export const HassEntityCard: FC<HassEntityCardProps> = observer(function HassEnt
             return "100%";
         }
         else {
-            return "49%";
+            if(Dimensions.get('window').width > 500) {
+                return "24%";
+            }
+            else {
+                return "49%";
+            }
         }
     }
 
@@ -80,26 +87,21 @@ export const HassEntityCard: FC<HassEntityCardProps> = observer(function HassEnt
     }
     
     function getDialogComponent(hassEntity: HassEntity): React.ReactNode {
+        console.log('SHOW DIALOG', hassEntity);
         switch(hassEntity.entity_id.split(".")[0]) {
             case "light":
                 return <LightDialogComponent hassEntity={props.hassEntity} toggle={props.onEntityPress}></LightDialogComponent>
             case "switch":
                 return <SwitchDialogComponent hassEntity={props.hassEntity} toggle={props.onEntityPress}></SwitchDialogComponent>
+            case "camera":
+                return <CameraDialogComponent hassEntity={props.hassEntity} toggle={props.onEntityPress}></CameraDialogComponent>
             default: 
                 return <Text>Not implemented</Text>
         }
-        return <SwitchDialogComponent hassEntity={props.hassEntity} toggle={props.onEntityPress}></SwitchDialogComponent>
-        return (
-            <Switch
-                onValueChange={toggle()}
-                value={props.hassEntity.state === "on"}>
-            </Switch>
-        )
     }
 
     return (
-        <View style={{ width: getWidth(), aspectRatio: getAspectRatio(), alignSelf: "flex-start", marginBottom: spacing.extraSmall,
-             }}>
+        <View style={{ width: getWidth(), aspectRatio: getAspectRatio(), alignSelf: "flex-start", marginBottom: spacing.extraSmall }}>
             <Card key={props.hassEntity.entity_id}
                 onPress={toggle()}
                 onLongPress={() => longPress()}
@@ -118,9 +120,9 @@ export const HassEntityCard: FC<HassEntityCardProps> = observer(function HassEnt
             <Dialog.Container visible={showDialog}>
                 <Dialog.Title>{props.hassEntity.attributes.friendly_name}</Dialog.Title>
                 <Dialog.Description>
-                    {getDialogComponent(props.hassEntity)}
+                    { getDialogComponent(props.hassEntity) }
                 </Dialog.Description>
-                <Dialog.Button label="Cancel" onPress={cancelDialog} />
+                <Dialog.Button label="Ok" onPress={cancelDialog} />
             </Dialog.Container>
         </View>
     );

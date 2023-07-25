@@ -25,6 +25,7 @@ import { spacing } from "../theme"
 import { RoomsScreen } from "../screens/RoomsScreen"
 import { SettingsScreen } from "../screens/SettingsScreen"
 import { EditRoomsScreen } from "../screens/EditRoomsScreen"
+import { EditRoomScreen } from "../screens/EditRoomScreen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -41,12 +42,14 @@ import { EditRoomsScreen } from "../screens/EditRoomsScreen"
  */
 export type AppStackParamList = {
   Welcome: undefined,
+  Home: undefined,
   // 🔥 Your screens go here
   Info: undefined,
   Room: undefined,
   Settings: undefined,
 
   EditRooms: undefined,
+  EditRoom: undefined,
 }
 
 /**
@@ -75,6 +78,7 @@ const AppStack = observer(function AppStack() {
           <Stack.Screen name="Settings" component={SettingsScreen} />
 
           <Stack.Screen name="EditRooms" component={EditRoomsScreen} />
+          <Stack.Screen name="EditRoom" component={EditRoomScreen} />
     </Stack.Navigator>
   )
 })
