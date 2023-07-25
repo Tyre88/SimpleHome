@@ -63,6 +63,7 @@ export const EditRoomScreen: FC<any> = observer(function EditRoomScreen(nav) {
     return (
         <ScrollView style={$editRoomsOuterWrapper}>
             <SafeAreaView style={$editRoomsWrapper}>
+                <Text style={[$h1, $margin.bottom.massive]}>EDIT ROOM</Text>
                 <TextInput style={$input}
                     onChangeText={text => onChangeText(text, 'name')}
                     value={room.name}
